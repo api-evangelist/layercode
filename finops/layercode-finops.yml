@@ -1,0 +1,98 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Layercode
+providerId: layercode
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: false
+tags:
+- AI
+- Voice
+- Voice Agents
+- Realtime
+- Low Latency
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Layercode spend. Layercode bills usage-based per-minute rates
+  for voice agent conversations. When using Layercode-managed STT (Deepgram)
+  and TTS (ElevenLabs, Cartesia, Rime) keys, those costs are folded into the
+  per-minute rate; with bring-your-own-keys (BYOK), STT/TTS and telephony are
+  billed directly through your own provider accounts. Exact per-minute rates
+  are not reconciled here.
+notes: >-
+  Per-minute rates and free allowances are subject to change and differ by
+  managed vs BYOK configuration; verify against the Layercode pricing page
+  during reconciliation.
+sources:
+- https://layercode.com/pricing
+- https://docs.layercode.com
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Layercode
+serviceCategory: AI and Machine Learning
+billingModel:
+  pricingCategory: Usage-Based
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Layercode
+  ServiceCategory: AI and Machine Learning
+  ProviderName: Layercode
+  PublisherName: Layercode
+  InvoiceIssuerName: Layercode
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: conversation_minutes
+  description: Minutes of voice agent conversation, billed per minute.
+  unit: minutes
+  aggregation: sum
+  dimensions:
+  - account
+  - agent
+- name: managed_stt_minutes
+  description: Speech-to-text minutes on Layercode-managed keys, folded into the per-minute rate.
+  unit: minutes
+  aggregation: sum
+  dimensions:
+  - account
+  - agent
+- name: managed_tts_minutes
+  description: Text-to-speech minutes on Layercode-managed keys, folded into the per-minute rate.
+  unit: minutes
+  aggregation: sum
+  dimensions:
+  - account
+  - agent
+- name: telephony_minutes
+  description: Phone (Twilio) minutes for inbound/outbound calls; billed via provider account under BYOK.
+  unit: minutes
+  aggregation: sum
+  dimensions:
+  - account
+  - agent
+principles:
+- name: Visibility
+  description: Pull Layercode usage exports and per-session duration; inspect per-agent minute burn.
+- name: Allocation
+  description: Tag agents per workload/team; map session minutes to internal cost centers.
+- name: Optimization
+  description: Tune turn-taking and latency settings to shorten calls; choose BYOK vs managed STT/TTS for best effective per-minute cost.
+- name: Accountability
+  description: Assign owners per agent; review monthly minute spend against budget.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

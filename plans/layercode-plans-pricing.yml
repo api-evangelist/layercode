@@ -1,0 +1,72 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Layercode
+providerId: layercode
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: false
+tags:
+- AI
+- Voice
+- Voice Agents
+- Realtime
+- Low Latency
+- Plans
+description: >-
+  Layercode uses simple usage-based pricing for voice AI agents, metered per
+  minute of conversation. Speech-to-text (Deepgram) and text-to-speech
+  (ElevenLabs, Cartesia, Rime) can run on Layercode-managed keys or your own
+  bring-your-own-keys (BYOK), where the underlying STT/TTS and any telephony
+  costs are billed directly through your provider accounts. Exact per-minute
+  rates, free-tier minutes, and tier thresholds are not reconciled in this
+  artifact and should be verified on the Layercode pricing page.
+notes: >-
+  Layercode's published rates and free allowance change over time, and BYOK
+  vs managed STT/TTS materially affects effective per-minute cost. Verify
+  current numbers on the pricing page during reconciliation. (The pricing
+  URL was observed redirecting during research; confirm the live page.)
+sources:
+- https://layercode.com/pricing
+- https://docs.layercode.com
+plans:
+- id: layercode-usage
+  name: Usage-Based
+  type: usage
+  description: >-
+    Pay-as-you-go voice agent usage metered per minute of conversation, with
+    STT/TTS either on Layercode-managed keys or your own provider keys.
+  entries:
+  - label: Voice Agent Minutes
+    name: voice_minutes
+    type: usage
+    metric: minutes
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: see provider pricing page (per minute)
+    userMultiplied: false
+  - label: Managed STT/TTS Pass-Through
+    name: managed_stt_tts
+    type: usage
+    metric: minutes
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: see provider pricing page (per minute, when using Layercode-managed keys)
+    userMultiplied: false
+  - label: Bring-Your-Own-Keys (BYOK)
+    name: byok_stt_tts
+    type: usage
+    metric: minutes
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: STT/TTS and telephony billed directly via your provider accounts
+    userMultiplied: false
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

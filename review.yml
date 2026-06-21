@@ -1,0 +1,81 @@
+aid: layercode
+name: Layercode
+review:
+  question: Does Layercode expose a documented public WebSocket API?
+  answer: true
+  date: '2026-06-21'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: true
+  asyncapiScopeNote: |
+    Layercode documents a genuine bidirectional realtime voice WebSocket at
+    https://docs.layercode.com/api-reference/frontend-ws-api. An AsyncAPI 2.6
+    document was created at asyncapi/layercode-asyncapi.yml modeling the
+    WebSocket message flow (client.ready, client.audio, trigger.*, and the
+    server-sent turn.start, response.audio, response.text(.delta),
+    user.transcript(.delta), response.data events). The companion webhook
+    HTTP+SSE surface (Layercode POSTs transcript events to your backend, your
+    backend streams response.tts / response.data / response.end back as SSE)
+    is summarized in the AsyncAPI info.x-webhook-notes and described in the
+    Webhooks API, but is a separate HTTP+SSE channel and is not modeled as
+    WebSocket.
+findings:
+  summary: |
+    Layercode DOES publish a documented public WebSocket API. The realtime
+    voice transport is a true full-duplex WebSocket at
+    wss://api.layercode.com/v1/agents/web/websocket, opened by the browser
+    with a short-lived client_session_key query parameter obtained from the
+    REST endpoint POST /v1/agents/web/authorize_session. The client streams
+    base64 16-bit PCM microphone audio (8000 Hz, mono) up, and Layercode
+    streams synthesized speech (base64 16-bit PCM, 16000 Hz, mono),
+    transcripts, streamed assistant text, and structured data back, organized
+    into user/assistant turns by turn_id. Separately, a REST API
+    (https://api.layercode.com/v1) manages agents, sessions, recordings, and
+    outbound calls, and a signed (HMAC layercode-signature) webhook delivers
+    transcript events to your backend which streams SSE responses back.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.layercode.com/v1
+      documented: true
+    - protocol: WebSocket
+      scheme: wss
+      baseURL: wss://api.layercode.com/v1/agents/web/websocket
+      documented: true
+      note: Bidirectional realtime voice transport; full-duplex audio + events.
+    - protocol: SSE
+      scheme: https
+      documented: true
+      note: Webhook channel - your backend streams response.tts/response.data/response.end Server-Sent Events back to Layercode in reply to its POSTed events.
+  endpointsConfirmedRest:
+    - GET    https://api.layercode.com/v1/agents
+    - POST   https://api.layercode.com/v1/agents
+    - GET    https://api.layercode.com/v1/agents/{agent_id}
+    - POST   https://api.layercode.com/v1/agents/{agent_id}
+    - POST   https://api.layercode.com/v1/agents/web/authorize_session
+    - GET    https://api.layercode.com/v1/agents/{agent_id}/sessions/{session_id}
+    - GET    https://api.layercode.com/v1/agents/{agent_id}/sessions/{session_id}/recording
+    - POST   https://api.layercode.com/v1/agents/{agent_id}/calls/initiate_outbound
+  websocketConfirmed:
+    - 'wss://api.layercode.com/v1/agents/web/websocket?client_session_key=...'
+sources:
+  - url: https://docs.layercode.com/explanations/how-layercode-works
+    type: Documentation
+    note: Architecture overview - authorize_session, WebSocket transport, and webhook to your backend.
+  - url: https://docs.layercode.com/api-reference/rest-api
+    type: APIReference
+    note: REST endpoints for agents, sessions, recordings, and outbound calls.
+  - url: https://docs.layercode.com/api-reference/frontend-ws-api
+    type: APIReference
+    note: Documents the realtime WebSocket URL and every client/server message type.
+  - url: https://docs.layercode.com/api-reference/webhook-sse-api
+    type: APIReference
+    note: Documents the signed webhook events and the SSE response stream from your backend.
+actions:
+  asyncapiPath: asyncapi/layercode-asyncapi.yml
+  apisYmlUpdated: true
+  reason: |
+    A documented WebSocket protocol surface exists, so an AsyncAPI 2.6 document
+    was authored modeling the realtime voice WebSocket message flow, with the
+    WebSocket transport documented explicitly in the server binding and
+    info.x-transport-notes, and the separate webhook HTTP+SSE channel captured
+    in info.x-webhook-notes so the two transports are never conflated.

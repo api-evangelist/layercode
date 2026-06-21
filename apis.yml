@@ -1,0 +1,125 @@
+aid: layercode
+url: https://raw.githubusercontent.com/api-evangelist/layercode/refs/heads/main/apis.yml
+name: Layercode
+kind: company
+description: Layercode provides voice-AI agent infrastructure - low-latency voice
+  pipelines that turn any LLM or text-based agent into a conversational voice agent
+  for web, mobile, and phone. A REST API manages agents, sessions, and outbound
+  calls, while a realtime WebSocket transport streams audio to the browser and a
+  signed webhook delivers transcripts to your backend, which streams text-to-speech
+  responses back over Server-Sent Events.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- AI
+- Voice
+- Voice Agents
+- Realtime
+- Low Latency
+created: '2026-06-21'
+modified: '2026-06-21'
+specificationVersion: '0.19'
+apis:
+- aid: layercode:layercode-agents-api
+  name: Layercode Agents API
+  tags:
+  - Agents
+  - Pipelines
+  - Management
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.layercode.com/api-reference/rest-api
+  baseURL: https://api.layercode.com/v1
+  properties:
+  - url: https://docs.layercode.com/api-reference/rest-api
+    type: Documentation
+  - url: https://docs.layercode.com/api-reference/rest-api
+    type: APIReference
+  - url: openapi/layercode-openapi.yml
+    type: OpenAPI
+  - url: collections/layercode.postman_collection.json
+    type: PostmanCollection
+  - url: collections/layercode.opencollection.json
+    type: OpenCollection
+  description: List, create, retrieve, and update voice agents (pipelines) and
+    authorize browser client sessions against an agent using an org-scoped API key.
+- aid: layercode:layercode-sessions-api
+  name: Layercode Sessions API
+  tags:
+  - Sessions
+  - Conversations
+  - Recordings
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.layercode.com/api-reference/rest-api
+  baseURL: https://api.layercode.com/v1
+  properties:
+  - url: https://docs.layercode.com/api-reference/rest-api
+    type: Documentation
+  - url: https://docs.layercode.com/api-reference/rest-api
+    type: APIReference
+  - url: openapi/layercode-openapi.yml
+    type: OpenAPI
+  - url: collections/layercode.postman_collection.json
+    type: PostmanCollection
+  - url: collections/layercode.opencollection.json
+    type: OpenCollection
+  description: Retrieve session detail - transcript, duration, metadata, and
+    recording status - for a conversation handled by an agent, and download the
+    session audio recording, plus initiate outbound phone calls.
+- aid: layercode:layercode-realtime-voice-api
+  name: Layercode Realtime Voice API
+  tags:
+  - Realtime
+  - WebSocket
+  - Voice
+  - Audio
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.layercode.com/api-reference/frontend-ws-api
+  baseURL: wss://api.layercode.com/v1/agents/web/websocket
+  properties:
+  - url: https://docs.layercode.com/api-reference/frontend-ws-api
+    type: Documentation
+  - url: https://docs.layercode.com/api-reference/frontend-ws-api
+    type: APIReference
+  - url: asyncapi/layercode-asyncapi.yml
+    type: AsyncAPI
+  description: Bidirectional realtime WebSocket transport that streams base64 PCM
+    microphone audio from the browser to Layercode and streams synthesized speech,
+    transcripts, and structured data back, authorized with a short-lived
+    client_session_key.
+- aid: layercode:layercode-webhooks-api
+  name: Layercode Webhooks API
+  tags:
+  - Webhooks
+  - SSE
+  - Events
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://docs.layercode.com/api-reference/webhook-sse-api
+  baseURL: https://docs.layercode.com/api-reference/webhook-sse-api
+  properties:
+  - url: https://docs.layercode.com/api-reference/webhook-sse-api
+    type: Documentation
+  - url: https://docs.layercode.com/api-reference/webhook-sse-api
+    type: APIReference
+  - url: asyncapi/layercode-asyncapi.yml
+    type: AsyncAPI
+  description: HMAC-signed webhook Layercode POSTs to your backend with session and
+    transcript events (session.start, message, data, session.update, session.end);
+    your backend streams response.tts / response.data / response.end events back as
+    Server-Sent Events that drive the agent's speech.
+common:
+- type: GitHubOrganization
+  url: https://github.com/layercodedev
+- type: LinkedIn
+  url: https://www.linkedin.com/company/layercode
+- type: Website
+  url: https://layercode.com
+- type: Documentation
+  url: https://docs.layercode.com
+- type: Plans
+  url: plans/layercode-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/layercode-rate-limits.yml
+- type: FinOps
+  url: finops/layercode-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

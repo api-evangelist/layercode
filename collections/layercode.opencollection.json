@@ -1,0 +1,143 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Layercode REST API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Agents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List agents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.layercode.com/v1/agents"
+          },
+          "docs": "Returns all voice agents (pipelines) in the organization."
+        },
+        {
+          "info": {
+            "name": "Create an agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.layercode.com/v1/agents",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new voice agent, optionally from a template."
+        },
+        {
+          "info": {
+            "name": "Get an agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.layercode.com/v1/agents/{agent_id}"
+          },
+          "docs": "Retrieves a single agent by id."
+        },
+        {
+          "info": {
+            "name": "Update an agent",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.layercode.com/v1/agents/{agent_id}",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates mutable agent fields such as name and webhook URL."
+        },
+        {
+          "info": {
+            "name": "Authorize a browser client session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.layercode.com/v1/agents/web/authorize_session",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a short-lived client_session_key the browser uses to open the realtime WebSocket, plus the conversation_id."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get session detail",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.layercode.com/v1/agents/{agent_id}/sessions/{session_id}"
+          },
+          "docs": "Returns metadata, transcript, duration, and recording status for a single session."
+        },
+        {
+          "info": {
+            "name": "Download session recording",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.layercode.com/v1/agents/{agent_id}/sessions/{session_id}/recording"
+          },
+          "docs": "Returns the WAV audio recording for the session, when available."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Calls",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Initiate an outbound call",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.layercode.com/v1/agents/{agent_id}/calls/initiate_outbound",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Places an outbound phone call from an assigned phone number to a destination number, connecting the callee to the voice agent."
+        }
+      ]
+    }
+  ]
+}

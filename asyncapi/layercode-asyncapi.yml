@@ -1,0 +1,314 @@
+asyncapi: '2.6.0'
+id: 'urn:com:layercode:agents:web:websocket'
+info:
+  title: Layercode Realtime Voice WebSocket API
+  version: '1.0.0'
+  description: |
+    AsyncAPI 2.6 description of Layercode's **realtime voice transport**, a
+    genuine bidirectional WebSocket documented at
+    https://docs.layercode.com/api-reference/frontend-ws-api.
+
+    Unlike one-way HTTP SSE, this is a true full-duplex WebSocket. The browser
+    opens the connection at
+    `wss://api.layercode.com/v1/agents/web/websocket?client_session_key=...`
+    using a short-lived `client_session_key` obtained from the REST endpoint
+    `POST /v1/agents/web/authorize_session` (modeled in
+    `openapi/layercode-openapi.yml`).
+
+    Over the socket the client streams base64-encoded 16-bit PCM microphone
+    audio (8000 Hz, mono) to Layercode, and Layercode streams back synthesized
+    speech (base64 16-bit PCM, 16000 Hz, mono), interim and final transcripts,
+    streamed assistant text, and structured data, organized into user and
+    assistant turns identified by `turn_id`.
+
+    The companion webhook surface - where Layercode POSTs transcript events to
+    your backend and your backend streams response.tts / response.data /
+    response.end events back as Server-Sent Events - is documented at
+    https://docs.layercode.com/api-reference/webhook-sse-api and summarized in
+    `info.x-webhook-notes` below; it is a separate HTTP+SSE channel and is not
+    modeled as WebSocket here.
+  contact:
+    name: API Evangelist
+    email: kin@apievangelist.com
+    url: https://apievangelist.com
+  license:
+    name: API documentation - Layercode Terms
+    url: https://layercode.com/terms
+  x-transport-notes:
+    transport: WebSocket
+    protocol: wss
+    direction: bidirectional (full-duplex)
+    url: 'wss://api.layercode.com/v1/agents/web/websocket'
+    authorizedBy: 'client_session_key query parameter from POST /v1/agents/web/authorize_session'
+    clientAudio: base64 16-bit PCM, 8000 Hz, mono
+    serverAudio: base64 16-bit PCM, 16000 Hz, mono
+    source: https://docs.layercode.com/api-reference/frontend-ws-api
+  x-webhook-notes:
+    transport: HTTP Server-Sent Events (SSE)
+    direction: 'Layercode POSTs JSON events to your backend webhook; backend streams SSE back'
+    requestEvents: [session.start, message, data, session.update, session.end]
+    responseEvents: [response.tts, response.data, response.end, response.hangup]
+    signatureHeader: layercode-signature
+    source: https://docs.layercode.com/api-reference/webhook-sse-api
+defaultContentType: application/json
+servers:
+  layercode:
+    url: api.layercode.com/v1/agents/web/websocket
+    protocol: wss
+    description: |
+      Layercode realtime voice WebSocket. The browser connects with a
+      short-lived client_session_key query parameter. The connection is
+      full-duplex: the client publishes microphone audio and control messages,
+      and the server publishes audio, transcripts, text, and data events.
+channels:
+  /v1/agents/web/websocket:
+    description: |
+      Realtime voice channel. Opened by the browser with
+      `?client_session_key=...`. Both directions exchange JSON text frames; all
+      audio payloads are carried as base64 strings inside JSON messages.
+    bindings:
+      ws:
+        query:
+          type: object
+          properties:
+            client_session_key:
+              type: string
+              description: Short-lived session key from authorize_session.
+          required:
+            - client_session_key
+    publish:
+      operationId: clientToServer
+      summary: Messages the client sends to Layercode.
+      message:
+        oneOf:
+          - $ref: '#/components/messages/ClientReady'
+          - $ref: '#/components/messages/ClientAudio'
+          - $ref: '#/components/messages/TriggerTurnStart'
+          - $ref: '#/components/messages/TriggerTurnEnd'
+          - $ref: '#/components/messages/TriggerAudioReplayFinished'
+          - $ref: '#/components/messages/ClientResponseText'
+          - $ref: '#/components/messages/ClientResponseData'
+    subscribe:
+      operationId: serverToClient
+      summary: Messages Layercode sends to the client.
+      message:
+        oneOf:
+          - $ref: '#/components/messages/TurnStart'
+          - $ref: '#/components/messages/ResponseAudio'
+          - $ref: '#/components/messages/ResponseTextDelta'
+          - $ref: '#/components/messages/ResponseText'
+          - $ref: '#/components/messages/UserTranscriptInterimDelta'
+          - $ref: '#/components/messages/UserTranscriptDelta'
+          - $ref: '#/components/messages/UserTranscript'
+          - $ref: '#/components/messages/ResponseData'
+components:
+  messages:
+    ClientReady:
+      name: client.ready
+      title: Client ready
+      summary: Signals the client is connected and ready to stream.
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: client.ready
+    ClientAudio:
+      name: client.audio
+      title: Client audio chunk
+      summary: A chunk of microphone audio from the browser.
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: client.audio
+          content:
+            type: string
+            description: Base64-encoded 16-bit PCM audio, 8000 Hz, mono.
+    TriggerTurnStart:
+      name: trigger.turn.start
+      title: Turn start trigger (push-to-talk)
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: trigger.turn.start
+          role:
+            type: string
+            const: user
+    TriggerTurnEnd:
+      name: trigger.turn.end
+      title: Turn end trigger (push-to-talk)
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: trigger.turn.end
+          role:
+            type: string
+            const: user
+    TriggerAudioReplayFinished:
+      name: trigger.response.audio.replay_finished
+      title: Audio replay finished
+      summary: Client finished playing back a response audio turn.
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: trigger.response.audio.replay_finished
+          reason:
+            type: string
+          turn_id:
+            type: string
+            format: uuid
+    ClientResponseText:
+      name: client.response.text
+      title: Client text message
+      summary: A typed text message from the user.
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: client.response.text
+          content:
+            type: string
+    ClientResponseData:
+      name: client.response.data
+      title: Client structured data
+      summary: Arbitrary structured JSON emitted by the client UI.
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: client.response.data
+          data:
+            type: object
+            additionalProperties: true
+    TurnStart:
+      name: turn.start
+      title: Turn start
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: turn.start
+          role:
+            type: string
+            enum:
+              - user
+              - assistant
+          turn_id:
+            type: string
+            format: uuid
+    ResponseAudio:
+      name: response.audio
+      title: Response audio chunk
+      summary: Synthesized speech audio from Layercode.
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: response.audio
+          content:
+            type: string
+            description: Base64-encoded 16-bit PCM audio, 16000 Hz, mono.
+          delta_id:
+            type: string
+            format: uuid
+          turn_id:
+            type: string
+            format: uuid
+    ResponseTextDelta:
+      name: response.text.delta
+      title: Response text delta
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: response.text.delta
+          content:
+            type: string
+          turn_id:
+            type: string
+            format: uuid
+    ResponseText:
+      name: response.text
+      title: Response text (complete)
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: response.text
+          content:
+            type: string
+          turn_id:
+            type: string
+            format: uuid
+    UserTranscriptInterimDelta:
+      name: user.transcript.interim_delta
+      title: Interim transcript delta
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: user.transcript.interim_delta
+          content:
+            type: string
+          turn_id:
+            type: string
+            format: uuid
+    UserTranscriptDelta:
+      name: user.transcript.delta
+      title: Final transcript delta
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: user.transcript.delta
+          content:
+            type: string
+          turn_id:
+            type: string
+            format: uuid
+    UserTranscript:
+      name: user.transcript
+      title: Complete turn transcript
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: user.transcript
+          content:
+            type: string
+          turn_id:
+            type: string
+            format: uuid
+    ResponseData:
+      name: response.data
+      title: Response structured data
+      summary: Structured JSON pushed to the client without audio.
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: response.data
+          content:
+            type: object
+            additionalProperties: true
+          turn_id:
+            type: string
+            format: uuid

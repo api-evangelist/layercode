@@ -1,0 +1,56 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Layercode
+providerId: layercode
+created: '2026-06-21'
+modified: '2026-06-21'
+reconciled: false
+tags:
+- AI
+- Voice
+- Voice Agents
+- Realtime
+- Low Latency
+- Rate Limiting
+- Quotas
+- Throttling
+description: >-
+  Layercode meters voice agent usage per minute of conversation across the
+  REST API, the realtime WebSocket transport, and concurrent sessions.
+  Specific per-account request rates, concurrent session caps, and per-minute
+  quotas are not published as fixed numbers and vary by plan; they are not
+  reconciled in this artifact.
+notes: >-
+  Verify REST request limits, concurrent realtime session limits, and any
+  per-minute usage quotas in the Layercode dashboard or by contacting
+  Layercode during reconciliation.
+sources:
+- https://docs.layercode.com/api-reference/rest-api
+- https://layercode.com/pricing
+responseCodes:
+  throttled: 429
+limits:
+- name: REST Requests
+  scope: account
+  metric: requests
+  limit: see provider documentation
+  notes: Per-account REST request rate; specific value not published.
+- name: Concurrent Sessions
+  scope: account
+  metric: sessions
+  limit: see provider documentation
+  notes: Maximum concurrent realtime voice sessions; varies by plan.
+- name: Conversation Minutes
+  scope: account
+  metric: minutes
+  limit: see provider documentation
+  notes: Usage metered per minute; any plan allowance not reconciled here.
+policies:
+- name: Tiered Limits
+  description: Limits raise as accounts move from free to paid usage and via Enterprise agreements.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor Retry-After.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
