@@ -1,0 +1,13 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/layercode-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: Org-scoped Layercode API key passed as a Bearer token.
+  sources:
+  - openapi/layercode-openapi.yml
