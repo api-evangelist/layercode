@@ -106,6 +106,8 @@ apis:
     your backend streams response.tts / response.data / response.end events back as
     Server-Sent Events that drive the agent's speech.
 common:
+- type: AgenticAccess
+  url: agentic-access/layercode-agentic-access.yml
 - type: DomainSecurity
   url: security/layercode-domain-security.yml
 - type: Authentication
