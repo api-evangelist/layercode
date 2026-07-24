@@ -1,0 +1,163 @@
+openapi: 3.0.1
+info:
+  title: Layercode REST Agents Sessions API
+  description: REST API for the Layercode voice-AI agent platform. Manage agents (voice pipelines), authorize browser client sessions, retrieve session detail and recordings, and initiate outbound phone calls. All requests are authenticated with an org-scoped API key passed as a Bearer token.
+  termsOfService: https://layercode.com/terms
+  contact:
+    name: Layercode Support
+    url: https://docs.layercode.com
+  version: '1.0'
+servers:
+- url: https://api.layercode.com/v1
+security:
+- bearerAuth: []
+tags:
+- name: Sessions
+paths:
+  /agents/web/authorize_session:
+    post:
+      operationId: authorizeSession
+      tags:
+      - Sessions
+      summary: Authorize a browser client session
+      description: Called from your backend with an agent_id and your org-scoped API key. Returns a short-lived client_session_key the browser uses to open the realtime WebSocket, plus the conversation_id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizeSessionRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizeSessionResponse'
+  /agents/{agent_id}/sessions/{session_id}:
+    get:
+      operationId: getSession
+      tags:
+      - Sessions
+      summary: Get session detail
+      description: Returns metadata, transcript, duration, and recording status for a single conversation session handled by the agent.
+      parameters:
+      - $ref: '#/components/parameters/AgentId'
+      - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+  /agents/{agent_id}/sessions/{session_id}/recording:
+    get:
+      operationId: getSessionRecording
+      tags:
+      - Sessions
+      summary: Download session recording
+      description: Returns the WAV audio recording for the session, when available.
+      parameters:
+      - $ref: '#/components/parameters/AgentId'
+      - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            audio/wav:
+              schema:
+                type: string
+                format: binary
+components:
+  schemas:
+    AuthorizeSessionRequest:
+      type: object
+      required:
+      - agent_id
+      properties:
+        agent_id:
+          type: string
+        conversation_id:
+          type: string
+          description: Optional existing conversation to resume.
+        config:
+          type: object
+          description: Optional per-session overrides.
+          additionalProperties: true
+    TranscriptEntry:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - user
+          - assistant
+        text:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    Session:
+      type: object
+      properties:
+        session_id:
+          type: string
+        agent_id:
+          type: string
+        conversation_id:
+          type: string
+        started_at:
+          type: string
+          format: date-time
+        ended_at:
+          type: string
+          format: date-time
+        duration_ms:
+          type: integer
+        metadata:
+          type: object
+          additionalProperties: true
+        from_phone_number:
+          type: string
+        to_phone_number:
+          type: string
+        transcript:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranscriptEntry'
+        recording_status:
+          type: string
+        recording_url:
+          type: string
+    AuthorizeSessionResponse:
+      type: object
+      properties:
+        client_session_key:
+          type: string
+          description: Short-lived key the browser uses to open the WebSocket.
+        conversation_id:
+          type: string
+        config:
+          type: object
+          additionalProperties: true
+  parameters:
+    SessionId:
+      name: session_id
+      in: path
+      required: true
+      description: The unique identifier of the session (conversation).
+      schema:
+        type: string
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      description: The unique identifier of the agent.
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Org-scoped Layercode API key passed as a Bearer token.

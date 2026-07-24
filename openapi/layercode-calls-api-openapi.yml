@@ -1,0 +1,71 @@
+openapi: 3.0.1
+info:
+  title: Layercode REST Agents Calls API
+  description: REST API for the Layercode voice-AI agent platform. Manage agents (voice pipelines), authorize browser client sessions, retrieve session detail and recordings, and initiate outbound phone calls. All requests are authenticated with an org-scoped API key passed as a Bearer token.
+  termsOfService: https://layercode.com/terms
+  contact:
+    name: Layercode Support
+    url: https://docs.layercode.com
+  version: '1.0'
+servers:
+- url: https://api.layercode.com/v1
+security:
+- bearerAuth: []
+tags:
+- name: Calls
+paths:
+  /agents/{agent_id}/calls/initiate_outbound:
+    post:
+      operationId: initiateOutboundCall
+      tags:
+      - Calls
+      summary: Initiate an outbound call
+      description: Places an outbound phone call from an assigned phone number to a destination number, connecting the callee to the voice agent.
+      parameters:
+      - $ref: '#/components/parameters/AgentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitiateOutboundRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitiateOutboundResponse'
+components:
+  schemas:
+    InitiateOutboundResponse:
+      type: object
+      properties:
+        conversation_id:
+          type: string
+    InitiateOutboundRequest:
+      type: object
+      required:
+      - from_phone_number
+      - to_phone_number
+      properties:
+        from_phone_number:
+          type: string
+          description: An assigned Layercode phone number to call from.
+        to_phone_number:
+          type: string
+          description: The destination phone number to dial.
+      additionalProperties: true
+  parameters:
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      description: The unique identifier of the agent.
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Org-scoped Layercode API key passed as a Bearer token.

@@ -1,0 +1,150 @@
+openapi: 3.0.1
+info:
+  title: Layercode REST Agents API
+  description: REST API for the Layercode voice-AI agent platform. Manage agents (voice pipelines), authorize browser client sessions, retrieve session detail and recordings, and initiate outbound phone calls. All requests are authenticated with an org-scoped API key passed as a Bearer token.
+  termsOfService: https://layercode.com/terms
+  contact:
+    name: Layercode Support
+    url: https://docs.layercode.com
+  version: '1.0'
+servers:
+- url: https://api.layercode.com/v1
+security:
+- bearerAuth: []
+tags:
+- name: Agents
+paths:
+  /agents:
+    get:
+      operationId: listAgents
+      tags:
+      - Agents
+      summary: List agents
+      description: Returns all voice agents (pipelines) in the organization.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Agent'
+    post:
+      operationId: createAgent
+      tags:
+      - Agents
+      summary: Create an agent
+      description: Creates a new voice agent, optionally from a template.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAgentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+  /agents/{agent_id}:
+    get:
+      operationId: getAgent
+      tags:
+      - Agents
+      summary: Get an agent
+      parameters:
+      - $ref: '#/components/parameters/AgentId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+    post:
+      operationId: updateAgent
+      tags:
+      - Agents
+      summary: Update an agent
+      description: Updates mutable agent fields such as name and webhook URL.
+      parameters:
+      - $ref: '#/components/parameters/AgentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAgentRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+components:
+  parameters:
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      description: The unique identifier of the agent.
+      schema:
+        type: string
+  schemas:
+    Agent:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+          description: Agent transport type, e.g. web or phone.
+        config:
+          type: object
+          description: Voice pipeline configuration (STT, TTS, turn-taking).
+          additionalProperties: true
+        webhook_url:
+          type: string
+        webhook_secret:
+          type: string
+        agent_template_id:
+          type: string
+        assigned_phone_numbers:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CreateAgentRequest:
+      type: object
+      properties:
+        template_id:
+          type: string
+          description: Optional agent template to base the new agent on.
+        name:
+          type: string
+    UpdateAgentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        webhook_url:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Org-scoped Layercode API key passed as a Bearer token.
