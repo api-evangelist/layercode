@@ -1,0 +1,18 @@
+{
+  "provider": "layercode",
+  "sources": [
+    "layercode-agents-api-openapi.yml",
+    "layercode-calls-api-openapi.yml",
+    "layercode-sessions-api-openapi.yml"
+  ],
+  "outputs": [
+    "layercode-agents-api-openapi.yml",
+    "layercode-calls-api-openapi.yml",
+    "layercode-sessions-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

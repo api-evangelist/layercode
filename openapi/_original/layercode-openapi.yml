@@ -1,0 +1,331 @@
+openapi: 3.0.1
+info:
+  title: Layercode REST API
+  description: >-
+    REST API for the Layercode voice-AI agent platform. Manage agents
+    (voice pipelines), authorize browser client sessions, retrieve session
+    detail and recordings, and initiate outbound phone calls. All requests
+    are authenticated with an org-scoped API key passed as a Bearer token.
+  termsOfService: https://layercode.com/terms
+  contact:
+    name: Layercode Support
+    url: https://docs.layercode.com
+  version: '1.0'
+servers:
+  - url: https://api.layercode.com/v1
+security:
+  - bearerAuth: []
+paths:
+  /agents:
+    get:
+      operationId: listAgents
+      tags:
+        - Agents
+      summary: List agents
+      description: Returns all voice agents (pipelines) in the organization.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Agent'
+    post:
+      operationId: createAgent
+      tags:
+        - Agents
+      summary: Create an agent
+      description: Creates a new voice agent, optionally from a template.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAgentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+  /agents/{agent_id}:
+    get:
+      operationId: getAgent
+      tags:
+        - Agents
+      summary: Get an agent
+      parameters:
+        - $ref: '#/components/parameters/AgentId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+    post:
+      operationId: updateAgent
+      tags:
+        - Agents
+      summary: Update an agent
+      description: Updates mutable agent fields such as name and webhook URL.
+      parameters:
+        - $ref: '#/components/parameters/AgentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAgentRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+  /agents/web/authorize_session:
+    post:
+      operationId: authorizeSession
+      tags:
+        - Sessions
+      summary: Authorize a browser client session
+      description: >-
+        Called from your backend with an agent_id and your org-scoped API key.
+        Returns a short-lived client_session_key the browser uses to open the
+        realtime WebSocket, plus the conversation_id.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizeSessionRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorizeSessionResponse'
+  /agents/{agent_id}/sessions/{session_id}:
+    get:
+      operationId: getSession
+      tags:
+        - Sessions
+      summary: Get session detail
+      description: >-
+        Returns metadata, transcript, duration, and recording status for a
+        single conversation session handled by the agent.
+      parameters:
+        - $ref: '#/components/parameters/AgentId'
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+  /agents/{agent_id}/sessions/{session_id}/recording:
+    get:
+      operationId: getSessionRecording
+      tags:
+        - Sessions
+      summary: Download session recording
+      description: Returns the WAV audio recording for the session, when available.
+      parameters:
+        - $ref: '#/components/parameters/AgentId'
+        - $ref: '#/components/parameters/SessionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            audio/wav:
+              schema:
+                type: string
+                format: binary
+  /agents/{agent_id}/calls/initiate_outbound:
+    post:
+      operationId: initiateOutboundCall
+      tags:
+        - Calls
+      summary: Initiate an outbound call
+      description: >-
+        Places an outbound phone call from an assigned phone number to a
+        destination number, connecting the callee to the voice agent.
+      parameters:
+        - $ref: '#/components/parameters/AgentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitiateOutboundRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitiateOutboundResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Org-scoped Layercode API key passed as a Bearer token.
+  parameters:
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      description: The unique identifier of the agent.
+      schema:
+        type: string
+    SessionId:
+      name: session_id
+      in: path
+      required: true
+      description: The unique identifier of the session (conversation).
+      schema:
+        type: string
+  schemas:
+    Agent:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+          description: Agent transport type, e.g. web or phone.
+        config:
+          type: object
+          description: Voice pipeline configuration (STT, TTS, turn-taking).
+          additionalProperties: true
+        webhook_url:
+          type: string
+        webhook_secret:
+          type: string
+        agent_template_id:
+          type: string
+        assigned_phone_numbers:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CreateAgentRequest:
+      type: object
+      properties:
+        template_id:
+          type: string
+          description: Optional agent template to base the new agent on.
+        name:
+          type: string
+    UpdateAgentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        webhook_url:
+          type: string
+    AuthorizeSessionRequest:
+      type: object
+      required:
+        - agent_id
+      properties:
+        agent_id:
+          type: string
+        conversation_id:
+          type: string
+          description: Optional existing conversation to resume.
+        config:
+          type: object
+          description: Optional per-session overrides.
+          additionalProperties: true
+    AuthorizeSessionResponse:
+      type: object
+      properties:
+        client_session_key:
+          type: string
+          description: Short-lived key the browser uses to open the WebSocket.
+        conversation_id:
+          type: string
+        config:
+          type: object
+          additionalProperties: true
+    Session:
+      type: object
+      properties:
+        session_id:
+          type: string
+        agent_id:
+          type: string
+        conversation_id:
+          type: string
+        started_at:
+          type: string
+          format: date-time
+        ended_at:
+          type: string
+          format: date-time
+        duration_ms:
+          type: integer
+        metadata:
+          type: object
+          additionalProperties: true
+        from_phone_number:
+          type: string
+        to_phone_number:
+          type: string
+        transcript:
+          type: array
+          items:
+            $ref: '#/components/schemas/TranscriptEntry'
+        recording_status:
+          type: string
+        recording_url:
+          type: string
+    TranscriptEntry:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+            - user
+            - assistant
+        text:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    InitiateOutboundRequest:
+      type: object
+      required:
+        - from_phone_number
+        - to_phone_number
+      properties:
+        from_phone_number:
+          type: string
+          description: An assigned Layercode phone number to call from.
+        to_phone_number:
+          type: string
+          description: The destination phone number to dial.
+      additionalProperties: true
+    InitiateOutboundResponse:
+      type: object
+      properties:
+        conversation_id:
+          type: string
