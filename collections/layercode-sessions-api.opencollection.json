@@ -1,0 +1,89 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Layercode REST Agents Sessions API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Sessions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Authorize a browser client session",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.layercode.com/v1/agents/web/authorize_session",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Called from your backend with an agent_id and your org-scoped API key. Returns a short-lived client_session_key the browser uses to open the realtime WebSocket, plus the conversation_id."
+        },
+        {
+          "info": {
+            "name": "Get session detail",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.layercode.com/v1/agents/:agent_id/sessions/:session_id",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the agent."
+              },
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the session (conversation)."
+              }
+            ]
+          },
+          "docs": "Returns metadata, transcript, duration, and recording status for a single conversation session handled by the agent."
+        },
+        {
+          "info": {
+            "name": "Download session recording",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.layercode.com/v1/agents/:agent_id/sessions/:session_id/recording",
+            "params": [
+              {
+                "name": "agent_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the agent."
+              },
+              {
+                "name": "session_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the session (conversation)."
+              }
+            ]
+          },
+          "docs": "Returns the WAV audio recording for the session, when available."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
