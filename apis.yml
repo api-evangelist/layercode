@@ -23,6 +23,12 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/layercode.png
 tags:
+- Artificial Intelligence
+- Voice
+- Voice Agents
+- Real-Time
+- Low Latency
+tags_raw:
 - AI
 - Voice
 - Voice Agents
@@ -35,6 +41,11 @@ apis:
 - aid: layercode:layercode-realtime-voice-api
   name: Layercode Realtime Voice API
   tags:
+  - Real-Time
+  - WebSocket
+  - Voice
+  - Audio
+  tags_raw:
   - Realtime
   - WebSocket
   - Voice
@@ -56,6 +67,10 @@ apis:
 - aid: layercode:layercode-webhooks-api
   name: Layercode Webhooks API
   tags:
+  - Webhook
+  - SSE
+  - Event
+  tags_raw:
   - Webhooks
   - SSE
   - Events
