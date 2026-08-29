@@ -8,6 +8,18 @@ description: Layercode provides voice-AI agent infrastructure - low-latency voic
   calls, while a realtime WebSocket transport streams audio to the browser and a
   signed webhook delivers transcripts to your backend, which streams text-to-speech
   responses back over Server-Sent Events.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: unknown
   onboarding: self-serve
