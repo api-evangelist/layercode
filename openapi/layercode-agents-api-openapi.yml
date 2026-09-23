@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
   title: Layercode REST Agents API
   description: REST API for the Layercode voice-AI agent platform. Manage agents (voice pipelines), authorize browser client sessions, retrieve session detail and recordings, and initiate outbound phone calls. All requests are authenticated with an org-scoped API key passed as a Bearer token.
@@ -98,6 +98,21 @@ components:
       schema:
         type: string
   schemas:
+    UpdateAgentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        webhook_url:
+          type: string
+    CreateAgentRequest:
+      type: object
+      properties:
+        template_id:
+          type: string
+          description: Optional agent template to base the new agent on.
+        name:
+          type: string
     Agent:
       type: object
       properties:
@@ -128,21 +143,6 @@ components:
         updated_at:
           type: string
           format: date-time
-    CreateAgentRequest:
-      type: object
-      properties:
-        template_id:
-          type: string
-          description: Optional agent template to base the new agent on.
-        name:
-          type: string
-    UpdateAgentRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        webhook_url:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http

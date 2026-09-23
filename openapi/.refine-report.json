@@ -1,9 +1,7 @@
 {
   "provider": "layercode",
   "sources": [
-    "layercode-agents-api-openapi.yml",
-    "layercode-calls-api-openapi.yml",
-    "layercode-sessions-api-openapi.yml"
+    "_original/layercode-openapi.yml"
   ],
   "outputs": [
     "layercode-agents-api-openapi.yml",
@@ -13,6 +11,17 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "layercode-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "layercode-openapi.yml: declared missing tag: Agents",
+    "layercode-openapi.yml: declared missing tag: Calls",
+    "layercode-openapi.yml: declared missing tag: Sessions",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "layercode-agents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "layercode-calls-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "layercode-sessions-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

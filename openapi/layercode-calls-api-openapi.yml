@@ -1,6 +1,6 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Layercode REST Agents Calls API
+  title: Layercode REST Calls API
   description: REST API for the Layercode voice-AI agent platform. Manage agents (voice pipelines), authorize browser client sessions, retrieve session detail and recordings, and initiate outbound phone calls. All requests are authenticated with an org-scoped API key passed as a Bearer token.
   termsOfService: https://layercode.com/terms
   contact:
@@ -38,11 +38,6 @@ paths:
                 $ref: '#/components/schemas/InitiateOutboundResponse'
 components:
   schemas:
-    InitiateOutboundResponse:
-      type: object
-      properties:
-        conversation_id:
-          type: string
     InitiateOutboundRequest:
       type: object
       required:
@@ -56,6 +51,11 @@ components:
           type: string
           description: The destination phone number to dial.
       additionalProperties: true
+    InitiateOutboundResponse:
+      type: object
+      properties:
+        conversation_id:
+          type: string
   parameters:
     AgentId:
       name: agent_id
