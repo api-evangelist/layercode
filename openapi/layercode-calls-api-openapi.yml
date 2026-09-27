@@ -37,6 +37,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/InitiateOutboundResponse'
 components:
+  parameters:
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      description: The unique identifier of the agent.
+      schema:
+        type: string
   schemas:
     InitiateOutboundRequest:
       type: object
@@ -56,14 +64,6 @@ components:
       properties:
         conversation_id:
           type: string
-  parameters:
-    AgentId:
-      name: agent_id
-      in: path
-      required: true
-      description: The unique identifier of the agent.
-      schema:
-        type: string
   securitySchemes:
     bearerAuth:
       type: http

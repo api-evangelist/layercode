@@ -71,19 +71,20 @@ paths:
                 format: binary
 components:
   schemas:
-    TranscriptEntry:
+    AuthorizeSessionRequest:
       type: object
+      required:
+      - agent_id
       properties:
-        role:
+        agent_id:
           type: string
-          enum:
-          - user
-          - assistant
-        text:
+        conversation_id:
           type: string
-        timestamp:
-          type: string
-          format: date-time
+          description: Optional existing conversation to resume.
+        config:
+          type: object
+          description: Optional per-session overrides.
+          additionalProperties: true
     Session:
       type: object
       properties:
@@ -116,6 +117,19 @@ components:
           type: string
         recording_url:
           type: string
+    TranscriptEntry:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - user
+          - assistant
+        text:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
     AuthorizeSessionResponse:
       type: object
       properties:
@@ -127,33 +141,19 @@ components:
         config:
           type: object
           additionalProperties: true
-    AuthorizeSessionRequest:
-      type: object
-      required:
-      - agent_id
-      properties:
-        agent_id:
-          type: string
-        conversation_id:
-          type: string
-          description: Optional existing conversation to resume.
-        config:
-          type: object
-          description: Optional per-session overrides.
-          additionalProperties: true
   parameters:
-    AgentId:
-      name: agent_id
-      in: path
-      required: true
-      description: The unique identifier of the agent.
-      schema:
-        type: string
     SessionId:
       name: session_id
       in: path
       required: true
       description: The unique identifier of the session (conversation).
+      schema:
+        type: string
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      description: The unique identifier of the agent.
       schema:
         type: string
   securitySchemes:
