@@ -71,6 +71,19 @@ paths:
                 format: binary
 components:
   schemas:
+    TranscriptEntry:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - user
+          - assistant
+        text:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
     AuthorizeSessionRequest:
       type: object
       required:
@@ -84,6 +97,17 @@ components:
         config:
           type: object
           description: Optional per-session overrides.
+          additionalProperties: true
+    AuthorizeSessionResponse:
+      type: object
+      properties:
+        client_session_key:
+          type: string
+          description: Short-lived key the browser uses to open the WebSocket.
+        conversation_id:
+          type: string
+        config:
+          type: object
           additionalProperties: true
     Session:
       type: object
@@ -117,30 +141,6 @@ components:
           type: string
         recording_url:
           type: string
-    TranscriptEntry:
-      type: object
-      properties:
-        role:
-          type: string
-          enum:
-          - user
-          - assistant
-        text:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
-    AuthorizeSessionResponse:
-      type: object
-      properties:
-        client_session_key:
-          type: string
-          description: Short-lived key the browser uses to open the WebSocket.
-        conversation_id:
-          type: string
-        config:
-          type: object
-          additionalProperties: true
   parameters:
     SessionId:
       name: session_id
