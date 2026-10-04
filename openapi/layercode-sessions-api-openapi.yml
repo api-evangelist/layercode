@@ -70,45 +70,22 @@ paths:
                 type: string
                 format: binary
 components:
+  parameters:
+    SessionId:
+      name: session_id
+      in: path
+      required: true
+      description: The unique identifier of the session (conversation).
+      schema:
+        type: string
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      description: The unique identifier of the agent.
+      schema:
+        type: string
   schemas:
-    TranscriptEntry:
-      type: object
-      properties:
-        role:
-          type: string
-          enum:
-          - user
-          - assistant
-        text:
-          type: string
-        timestamp:
-          type: string
-          format: date-time
-    AuthorizeSessionRequest:
-      type: object
-      required:
-      - agent_id
-      properties:
-        agent_id:
-          type: string
-        conversation_id:
-          type: string
-          description: Optional existing conversation to resume.
-        config:
-          type: object
-          description: Optional per-session overrides.
-          additionalProperties: true
-    AuthorizeSessionResponse:
-      type: object
-      properties:
-        client_session_key:
-          type: string
-          description: Short-lived key the browser uses to open the WebSocket.
-        conversation_id:
-          type: string
-        config:
-          type: object
-          additionalProperties: true
     Session:
       type: object
       properties:
@@ -141,21 +118,44 @@ components:
           type: string
         recording_url:
           type: string
-  parameters:
-    SessionId:
-      name: session_id
-      in: path
-      required: true
-      description: The unique identifier of the session (conversation).
-      schema:
-        type: string
-    AgentId:
-      name: agent_id
-      in: path
-      required: true
-      description: The unique identifier of the agent.
-      schema:
-        type: string
+    TranscriptEntry:
+      type: object
+      properties:
+        role:
+          type: string
+          enum:
+          - user
+          - assistant
+        text:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+    AuthorizeSessionResponse:
+      type: object
+      properties:
+        client_session_key:
+          type: string
+          description: Short-lived key the browser uses to open the WebSocket.
+        conversation_id:
+          type: string
+        config:
+          type: object
+          additionalProperties: true
+    AuthorizeSessionRequest:
+      type: object
+      required:
+      - agent_id
+      properties:
+        agent_id:
+          type: string
+        conversation_id:
+          type: string
+          description: Optional existing conversation to resume.
+        config:
+          type: object
+          description: Optional per-session overrides.
+          additionalProperties: true
   securitySchemes:
     bearerAuth:
       type: http
