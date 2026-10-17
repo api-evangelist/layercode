@@ -38,11 +38,6 @@ paths:
                 $ref: '#/components/schemas/InitiateOutboundResponse'
 components:
   schemas:
-    InitiateOutboundResponse:
-      type: object
-      properties:
-        conversation_id:
-          type: string
     InitiateOutboundRequest:
       type: object
       required:
@@ -56,6 +51,11 @@ components:
           type: string
           description: The destination phone number to dial.
       additionalProperties: true
+    InitiateOutboundResponse:
+      type: object
+      properties:
+        conversation_id:
+          type: string
   parameters:
     AgentId:
       name: agent_id

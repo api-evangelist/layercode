@@ -89,14 +89,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Agent'
 components:
+  parameters:
+    AgentId:
+      name: agent_id
+      in: path
+      required: true
+      description: The unique identifier of the agent.
+      schema:
+        type: string
   schemas:
-    UpdateAgentRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        webhook_url:
-          type: string
     CreateAgentRequest:
       type: object
       properties:
@@ -135,14 +136,13 @@ components:
         updated_at:
           type: string
           format: date-time
-  parameters:
-    AgentId:
-      name: agent_id
-      in: path
-      required: true
-      description: The unique identifier of the agent.
-      schema:
-        type: string
+    UpdateAgentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        webhook_url:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http
