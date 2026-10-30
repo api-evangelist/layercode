@@ -1,4 +1,4 @@
-# Layercode (layercode)
+# Layercode
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,115 +66,140 @@
 
 Layercode provides voice-AI agent infrastructure - low-latency voice pipelines that turn any LLM or text-based agent into a conversational voice agent for web, mobile, and phone. A REST API manages agents, sessions, and outbound calls, while a realtime WebSocket transport streams audio to the browser and a signed webhook delivers transcripts to your backend, which streams text-to-speech responses back over Server-Sent Events.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/layercode/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/layercode/refs/heads/main/apis.yml)
+**Areas:** Artificial Intelligence · Voice · Voice Agents · Real-Time · Low Latency
 
-## Tags
+## Layercode on APIs.io
 
-- AI
-- Voice
-- Voice Agents
-- Realtime
-- Low Latency
+Everything profiled for Layercode is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/layercode/](https://apis.io/providers/layercode/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (5)
 
-- **Created:** 2026-06-21
-- **Modified:** 2026-06-21
+- [Layercode Realtime Voice API](https://apis.io/apis/layercode/layercode-realtime-voice-api/) — Bidirectional realtime WebSocket transport that streams base64 PCM microphone audio from the browser to Layercode and streams synthesized speech,…
+- [Layercode Webhooks API](https://apis.io/apis/layercode/layercode-webhooks-api/) — HMAC-signed webhook Layercode POSTs to your backend with session and transcript events (session.start, message, data, session.update, session.end); your…
+- [Layercode Agents API](https://apis.io/apis/layercode/layercode-agents-api/) — The Agents API from Layercode — 2 operation(s) for agents.
+- [Layercode Calls API](https://apis.io/apis/layercode/layercode-calls-api/) — The Calls API from Layercode — 1 operation(s) for calls.
+- [Layercode Sessions API](https://apis.io/apis/layercode/layercode-sessions-api/) — The Sessions API from Layercode — 3 operation(s) for sessions.
 
-## APIs
+### Published properties
 
-### Layercode Agents API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-List, create, retrieve, and update voice agents (pipelines) and authorize browser client sessions against an agent using an org-scoped API key.
+#### AsyncAPI (1)
 
-- **Human URL:** [https://docs.layercode.com/api-reference/rest-api](https://docs.layercode.com/api-reference/rest-api)
-- **Base URL:** `https://api.layercode.com/v1`
+Event-driven and webhook contracts.
 
-#### Tags
+- [Layercode Realtime Voice WebSocket API](https://apis.io/asyncapis/layercode/layercode-asyncapi/)
 
-- Agents
-- Pipelines
-- Management
+#### Event channels (1)
 
-#### Properties
+Individual events and webhooks the provider emits.
 
-- [Documentation](https://docs.layercode.com/api-reference/rest-api)
-- [API Reference](https://docs.layercode.com/api-reference/rest-api)
-- [OpenAPI](openapi/layercode-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/layercode.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/layercode.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [/v1/agents/web/websocket](https://apis.io/channels/layercode/v1-agents-web-websocket/)
 
-### Layercode Sessions API
+#### Agentic access (1)
 
-Retrieve session detail - transcript, duration, metadata, and recording status - for a conversation handled by an agent, and download the session audio recording, plus initiate outbound phone calls.
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- **Human URL:** [https://docs.layercode.com/api-reference/rest-api](https://docs.layercode.com/api-reference/rest-api)
-- **Base URL:** `https://api.layercode.com/v1`
+- [Layercode Agentic Access](https://apis.io/agentic-access/layercode/layercode-agentic-access/)
 
-#### Tags
+#### Collections (4)
 
-- Sessions
-- Conversations
-- Recordings
+Postman and Open Collection request collections.
 
-#### Properties
+- [Layercode REST API](https://apis.io/collections/layercode/open-layercode/)
+- [Layercode REST Agents API](https://apis.io/collections/layercode/open-layercode-agents-api/)
+- [Layercode REST Agents Calls API](https://apis.io/collections/layercode/open-layercode-calls-api/)
+- [Layercode REST Agents Sessions API](https://apis.io/collections/layercode/open-layercode-sessions-api/)
 
-- [Documentation](https://docs.layercode.com/api-reference/rest-api)
-- [API Reference](https://docs.layercode.com/api-reference/rest-api)
-- [OpenAPI](openapi/layercode-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/layercode.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/layercode.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Governance rules (1)
 
-### Layercode Realtime Voice API
+Spectral rulesets for the provider's contracts.
 
-Bidirectional realtime WebSocket transport that streams base64 PCM microphone audio from the browser to Layercode and streams synthesized speech, transcripts, and structured data back, authorized with a short-lived client_session_key.
+- [Layercode — asyncapi rules](https://apis.io/rules/layercode/layercode-asyncapi-spectral-rules/)
 
-- **Human URL:** [https://docs.layercode.com/api-reference/frontend-ws-api](https://docs.layercode.com/api-reference/frontend-ws-api)
-- **Base URL:** `wss://api.layercode.com/v1/agents/web/websocket`
+#### Security (2)
 
-#### Tags
+Authentication, trust centre, and vulnerability disclosure.
 
-- Realtime
-- WebSocket
-- Voice
-- Audio
+- [Layercode Authentication](https://apis.io/security/layercode/layercode-authentication/)
+- [Layercode Domain Security](https://apis.io/security/layercode/layercode-domain-security/)
 
-#### Properties
+#### Plans and pricing (1)
 
-- [Documentation](https://docs.layercode.com/api-reference/frontend-ws-api)
-- [API Reference](https://docs.layercode.com/api-reference/frontend-ws-api)
-- [AsyncAPI](asyncapi/layercode-asyncapi.yml) — [AsyncAPI Specification](https://www.asyncapi.com/docs/reference/specification/latest)
+Published plans, tiers and prices.
 
-### Layercode Webhooks API
+- [Layercode Plans Pricing](https://apis.io/plans/layercode/layercode-plans-pricing/)
 
-HMAC-signed webhook Layercode POSTs to your backend with session and transcript events (session.start, message, data, session.update, session.end); your backend streams response.tts / response.data / response.end events back as Server-Sent Events that drive the agent's speech.
+#### Rate limits (1)
 
-- **Human URL:** [https://docs.layercode.com/api-reference/webhook-sse-api](https://docs.layercode.com/api-reference/webhook-sse-api)
-- **Base URL:** `https://docs.layercode.com/api-reference/webhook-sse-api`
+Published request limits.
 
-#### Tags
+- [Layercode Rate Limits](https://apis.io/rate-limits/layercode/layercode-rate-limits/)
 
-- Webhooks
-- SSE
-- Events
+#### FinOps (1)
 
-#### Properties
+What the API costs to run, by operation.
 
-- [Documentation](https://docs.layercode.com/api-reference/webhook-sse-api)
-- [API Reference](https://docs.layercode.com/api-reference/webhook-sse-api)
-- [AsyncAPI](asyncapi/layercode-asyncapi.yml) — [AsyncAPI Specification](https://www.asyncapi.com/docs/reference/specification/latest)
+- [Layercode Finops](https://apis.io/finops/layercode/layercode-finops/)
 
-## Common Properties
+## Where to find this API
 
-- [GitHub Organization](https://github.com/layercodedev)
-- [LinkedIn](https://www.linkedin.com/company/layercode)
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://layercode.com)
 - [Documentation](https://docs.layercode.com)
-- [Plans](plans/layercode-plans-pricing.yml)
-- [Rate Limits](rate-limits/layercode-rate-limits.yml)
-- [Fin Ops](finops/layercode-finops.yml)
+- [Blog](https://toyo.ai/blog)
+- [GitHub](https://github.com/layercodedev)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 27.7** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 50.5 |
+| Contract governance | 11.4 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 32.1 |
+| Access clarity | 5.3 |
+
+**Agent readiness 19.0** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | derived (partial credit) |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 10.9** — AI & Biometrics
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/layercode/](https://apis.io/providers/layercode/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Layercode: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/layercode/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
